@@ -37,7 +37,7 @@ arr->elements = malloc(sizeof(char *) * capacity);
 void destroy_array(Array *arr) {
 
   // Free all elements
-  for(int i = 0; i < arr->count; i++)
+  for(int i = 0; i < arr->capacity; i++)
   {
     free(arr->elements[i]);
   }
@@ -77,7 +77,15 @@ void resize_array(Array *arr) {
 char *arr_read(Array *arr, int index) {
 
   // Throw an error if the index is greater than the current count
-
+  if(arr->count <= index)
+  {
+    perror("No element at index")
+  };
+  else
+  {
+    printf("%s", arr->element[index]);
+  }
+  
   // Otherwise, return the element at the given index
 }
 
