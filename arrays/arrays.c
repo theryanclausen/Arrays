@@ -83,6 +83,10 @@ void resize_array(Array *arr) {
  * Throw an error if the index is out of range.
  *****/
 int validate_index(Array *arr, int index) {
+  if(index == 0)
+  {
+    return 0;
+  }
   if(index >= arr->count || index < 0)
   {
     return -1;
@@ -188,6 +192,7 @@ void arr_remove(Array *arr, char *element) {
   if (!is_found)
   {
     perror("Element not in array.");
+    return;
   }
   else
   {
