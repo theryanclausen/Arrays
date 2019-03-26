@@ -28,6 +28,8 @@ arr->capacity = capacity;
 arr->count = 0;
   // Allocate memory for elements
 arr->elements = malloc(sizeof(char *) * capacity);
+
+return arr;
 }
 
 
@@ -80,10 +82,20 @@ void resize_array(Array *arr) {
  *
  * Throw an error if the index is out of range.
  *****/
+int validate_index(Array *arr, int index) {
+  if(index >= arr->count || index < 0)
+  {
+    return -1;
+  }
+  return index;
+}
+
 char *arr_read(Array *arr, int index) {
 
+  index = validate_index(arr,index);
+
   // Throw an error if the index is greater than the current count
-  if(index >= arr->count || index < 0)
+  if(index == -1)
   {
     perror("No element at index");
   }
@@ -100,17 +112,29 @@ char *arr_read(Array *arr, int index) {
  * Insert an element to the array at the given index
  *****/
 void arr_insert(Array *arr, char *element, int index) {
-
+  index = validate_index(arr, index);
   // Throw an error if the index is greater than the current count
+  if (index == -1)
+  {
+    perror("Index out of range.");
+    return;
+  }
 
   // Resize the array if the number of elements is over capacity
-
+  if(arr->count == arr->capacity)
+  {
+    resize_array(arr);
+  }
   // Move every element after the insert index to the right one position
-
+  for(int i = arr->count ; i > index; i--)
+  {
+    arr->elements[i] = arr->elements[i-1];
+  }
   // Copy the element and add it to the array
+  arr->elements[index] = strdup(element);
 
   // Increment count by 1
-
+  arr->count ++;
 }
 
 /*****
@@ -120,10 +144,15 @@ void arr_append(Array *arr, char *element) {
 
   // Resize the array if the number of elements is over capacity
   // or throw an error if resize isn't implemented yet.
+  if(arr->count == arr->capacity)
+  {
+    resize_array(arr);
+  }
 
   // Copy the element and add it to the end of the array
-
+  arr->elements[arr->count] = strdup(element);
   // Increment count by 1
+  arr->count++;
 
 }
 
@@ -137,10 +166,32 @@ void arr_remove(Array *arr, char *element) {
 
   // Search for the first occurence of the element and remove it.
   // Don't forget to free its memory!
-
+  int is_found = 0;
   // Shift over every element after the removed element to the left one position
-
+  for(int i = 0; i < arr->count; i++)
+  {
+    if(!is_found)
+    {
+      if(strcmp(element, arr->elements[i]) == 0)
+      {
+        is_found = 1;
+        free(arr->elements[i]);
+      }
+    }
+    if(is_found)
+    {
+      arr->elements[i] = arr->elements[i + 1];
+    }
+  }
   // Decrement count by 1
+  if (!is_found)
+  {
+    perror("Element not in array.");
+  }
+  else
+  {
+    arr->count--;
+  }
 
 }
 
