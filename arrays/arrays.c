@@ -60,9 +60,9 @@ void resize_array(Array *arr) {
   for (int i = 0; i < arr->count; i++)
   {
     new_storage[i] = arr->elements[i];
-    free(arr->elements[i]);
   }
   // Free the old elements array (but NOT the strings they point to)
+  free(arr->elements);
 
   // Update the elements and capacity to new values
   arr->elements = new_storage;
@@ -148,9 +148,10 @@ void arr_append(Array *arr, char *element) {
   {
     resize_array(arr);
   }
-
+  int new_last =arr->count;
+  char *new_element = strdup(element);
   // Copy the element and add it to the end of the array
-  arr->elements[arr->count] = strdup(element);
+  arr->elements[new_last] = new_element;
   // Increment count by 1
   arr->count++;
 
@@ -219,6 +220,10 @@ int main(void)
 
   arr_insert(arr, "STRING1", 0);
   arr_append(arr, "STRING4");
+  printf("%s\n",arr_read(arr,0));
+  arr_append(arr, "STRING");
+    printf("%s\n",arr_read(arr,0));
+  arr_print(arr);
   arr_insert(arr, "STRING2", 0);
   arr_insert(arr, "STRING3", 1);
   arr_print(arr);
