@@ -50,15 +50,21 @@ void destroy_array(Array *arr) {
  * from old to new
  *****/
 void resize_array(Array *arr) {
+  int new_cap = arr->capacity * 2;
 
   // Create a new element storage with double capacity
-
+  char **new_storage = malloc(sizeof(char **) * new_cap);
   // Copy elements into the new storage
-
+  for (int i = 0; i < arr->count; i++)
+  {
+    new_storage[i] = arr->elements[i];
+    free(arr->elements[i]);
+  }
   // Free the old elements array (but NOT the strings they point to)
 
   // Update the elements and capacity to new values
-
+  arr->elements = new_storage;
+  arr->capacity = new_cap;
 }
 
 
@@ -77,15 +83,15 @@ void resize_array(Array *arr) {
 char *arr_read(Array *arr, int index) {
 
   // Throw an error if the index is greater than the current count
-  if(arr->count <= index)
+  if(index >= arr->count || index < 0)
   {
-    perror("No element at index")
-  };
+    perror("No element at index");
+  }
   else
   {
-    printf("%s", arr->element[index]);
+    return arr->elements[index];
   }
-  
+  return NULL;
   // Otherwise, return the element at the given index
 }
 
